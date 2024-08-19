@@ -1,22 +1,29 @@
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer-extra';
+import stealthPlugin from 'puppeteer-extra-plugin-stealth';
+
+// Carregando o plugin de stealth
+puppeteer.use(stealthPlugin());
 
 async function pegarSinais() {
     const browser = await puppeteer.launch({
         headless: false,
-        executablePath: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe', 
-        userDataDir: 'C:\\Usuários\\Desktop\\AppData\\Local\\Microsoft\\Edge\\User Data\\personal',
+        executablePath: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe', // caminho para o executável do Edge
+        userDataDir: 'C:\\Usuários\\Desktop\\AppData\\Local\\Microsoft\\Edge\\User Data\\personal', // caminho para o diretório dos perfis do Edge
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     console.log('Iniciando navegador...');
 
+    // Definindo o user agent
     const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
     await page.setUserAgent(userAgent);
 
+    // Adicionando cabeçalhos HTTP
     await page.setExtraHTTPHeaders({
         'accept-language': 'en-US,en;q=0.9',
     });
 
+    // Definindo as dimensões da janela
     await page.setViewport({
         width: 1280,
         height: 800,
@@ -25,7 +32,7 @@ async function pegarSinais() {
     try {
         await page.goto('https://brazino777.com/pt/game/34165', {
             waitUntil: 'networkidle2',
-            timeout: 90000000000 
+            timeout: 9000000 // Aumenta o tempo limite para 1000 segundos
         });
 
         // Função para pegar e processar sinais
@@ -53,4 +60,5 @@ async function pegarSinais() {
     }
 }
 
+// Inicie a monitoração dos sinais
 pegarSinais();
